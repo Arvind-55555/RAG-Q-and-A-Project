@@ -1,0 +1,4 @@
+replicaCount: 1
+image:
+  repository: your-registry/rag-backend
+  tag: latest

@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: rag-backend
+    environment:
+      - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN}
+      - LLM_REPO=${LLM_REPO}
+      - EMBED_MODEL=${EMBED_MODEL}
+      - EMBED_DEVICE=${EMBED_DEVICE:-cuda}
+      - CHROMA_PATH=/app/chroma
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+    volumes:
+      - ./data:/app/data:ro
+      - ./chroma:/app/chroma
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: rag-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

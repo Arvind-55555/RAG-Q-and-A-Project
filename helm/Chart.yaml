@@ -1,0 +1,4 @@
+apiVersion: v2
+name: rag-qa
+version: 0.1.0
+description: RAG QA helm chart

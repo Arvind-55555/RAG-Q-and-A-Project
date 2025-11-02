@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rag-backend
+  template:
+    metadata:
+      labels:
+        app: rag-backend
+    spec:
+      containers:
+        - name: backend
+          image: your-registry/rag-backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: HUGGINGFACEHUB_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: rag-secrets
+                  key: HUGGINGFACEHUB_API_TOKEN
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: rag-secrets
+                  key: ADMIN_TOKEN
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: chroma
+              mountPath: /app/chroma
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: rag-data-pvc
+        - name: chroma
+          persistentVolumeClaim:
+            claimName: rag-chroma-pvc
