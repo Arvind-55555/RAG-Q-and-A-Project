@@ -1,4 +1,4 @@
-# RAG QA Project (Generated)
+# RAG QA Project 
 
 ## Overview
 This repo contains a production-ready RAG (Retrieval-Augmented Generation) example:
